@@ -1,22 +1,76 @@
-# Digital Communication Systems
+# SDR Network Interface System
 
-tl;dr: Non-optimal implementation of a digital communication system.
-The goal of this project is to learn how to do it in a proper way.
+A Software Defined Radio (SDR) educational project that creates a wireless communication channel between two virtual network interfaces using the Ettus UHD B210 device.
 
-This project doesn't have a time frame to be completed, and will evolve as my learning interests change. 
+## Overview
 
-## Goal
+This project implements a loopback communication system using Software Defined Radio. It creates two virtual network interfaces (TUN/TAP) in Linux that communicate with each other through the B210 SDR hardware, implementing simple modulation schemes and channel access mechanisms.
 
-This project is intended to be an ever evolving experimental ground to learn and experiment with digital communication systems.
+The system is designed for educational purposes, with comprehensive telemetry and visualization tools to help users understand the entire communication chain.
 
-The initial target is to build an end-to-end implementation of a communication system from the input of a data stream into a Tx side to the output of the decoded message stream on the Rx side.
-The inspiration will come from the 3gpp and 802.11 standards. If all goes well we will end up with an implementation that is capable of over-the-air communication, although I don't plan to actually implement the RF front-end part. The scope of this project is from the input/output of data to the DAC/ADC interfaces.
+## Current Implementation Status
 
-## Topics that will be covered
+The current implementation includes:
+- **Complete TUN/TAP network interface implementation** in C++
+- **Packet forwarding between two virtual interfaces** (simulating wireless transmission)
+- **Statistics collection and reporting**
+- **Command-line interface** with configurable parameters
+- **Cross-platform build system** (Linux for full functionality, macOS for development)
+- **Ready for SDR hardware integration** in future phases
 
--Digital communication systems
--Digital signal processing
--Embedded systems
--C/C++
--Test and debugging
--Instrumentation and performance evaluation
+This initial implementation provides a solid foundation for the SDR communication system and can be tested immediately with standard networking tools.
+
+## Requirements
+
+- Linux operating system
+- Ettus UHD B210 SDR device
+- UHD driver
+- Modern C++ compiler with C++17 support
+- CMake 3.14 or newer
+- Boost libraries
+
+## Building from Source
+
+```bash
+# Create build directory
+mkdir -p build
+cd build
+
+# Configure and build
+cmake ..
+make -j$(nproc)
+```
+
+## Usage
+
+```bash
+# Basic usage (requires root privileges for TUN/TAP interfaces)
+sudo ./bin/sdr_network
+
+# Testing the network interfaces
+# In terminal 1 (after starting the application):
+ping 192.168.20.1 -I 192.168.10.1
+
+# In terminal 2:
+sudo iperf3 -s -B 192.168.20.1
+
+# In terminal 3:
+sudo iperf3 -c 192.168.20.1 -B 192.168.10.1
+```
+
+## Project Structure
+
+```
+sdr-network/
+├── include/              # Public header files
+│   └── sdr-network/      # Main project headers
+├── src/                  # Implementation files
+├── tests/                # Test files
+├── examples/             # Example applications
+├── docs/                 # Documentation
+└── CMakeLists.txt        # Main CMake configuration
+```
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
